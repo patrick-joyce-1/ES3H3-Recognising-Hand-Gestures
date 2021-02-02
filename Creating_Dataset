@@ -1,0 +1,11 @@
+figure 
+clear cam
+cam = webcam(1);
+
+for i = 1:10
+    image = snapshot(cam);
+    imshow(image)
+    name = sprintf('image_%d.png',i); % Create image name (image_1,image_2..)
+    imwrite(image,name) % Save image with corresponding name
+    pause(0.1)
+end
