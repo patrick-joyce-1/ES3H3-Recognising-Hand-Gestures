@@ -56,4 +56,4 @@ for i = 1:noimages
     pause(0.01);
 end
 
-vw.close();
+vw.close(); 
