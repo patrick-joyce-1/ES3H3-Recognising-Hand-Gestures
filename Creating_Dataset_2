@@ -36,6 +36,7 @@ vw.open();
 
 for i = 1:noimages
     
+    % Pre-processing techniques
     frame = readFrame(vid);% Read next frame in 'vid' - assign to corresponding value in oksign.
     imgray = rgb2gray(frame);
     imgsize = imresize(imgray, [480, 640]);
@@ -54,7 +55,5 @@ for i = 1:noimages
     title(i);
     pause(0.01);
 end
-
-vw.close();
 
 vw.close();
