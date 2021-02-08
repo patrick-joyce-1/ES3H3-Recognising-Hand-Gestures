@@ -3,16 +3,17 @@ clear cam
 webcamlist
 cam = webcam(1);
 reference = snapshot(cam);
-
+imshow(reference);
 D = size(reference);
 
-array = zeros(D(1),D(2),D(3),100);
+array = zeros(D(1),D(2),D(3),400);
+sizeofarray = size(array);
 
-noimages = array(4)
+noimages = sizeofarray(4);
 
 %% Create Training / Testing Dataset
 set(gcf, 'Visible', 'on')
-vw = VideoWriter('Dataset.avi');
+vw = VideoWriter('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Descend_Dataset.avi');
 vw.open();
 
 figure;
@@ -20,29 +21,40 @@ figure;
 for i = 1:noimages
     image = snapshot(cam);
     imgsize = imresize(image, [480, 640]);
-    imshow(imgsize);
     vw.writeVideo(imgsize);
+    imshow(imgsize);
     title(i);
     pause(0.01);
 end
 
 vw.close();
 
-
-%% 
-vid = VideoReader('Dataset.avi');
-vw = VideoWriter('Processed.avi');
+%% Apply pre-processing techniques
+vid = VideoReader('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Descend_Dataset.avi');
+vw = VideoWriter('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Descend_Processed_Dataset.avi');
 vw.open();
 
 for i = 1:noimages
-frame = readFrame(vid);
-% Apply image processing techniques.. e.g. rgb2gray etc.
-name = sprintf('Image_%d.png',i);% Create a string corresponding to the image number
-filename = fullfile('File Location',name);% Creates variable of file path location (including name of the image).
-imwrite(imgbw4,filename); % Write image data to the file specified by filename (with the image name).
-vw.writeVideo(imgbw4);
-title(i);
-pause(0.01);
+    
+    frame = readFrame(vid);% Read next frame in 'vid' - assign to corresponding value in oksign.
+    imgray = rgb2gray(frame);
+    imgsize = imresize(imgray, [480, 640]);
+    imgbw = imcomplement(imbinarize(imgsize));
+    imgbw2 = imfill(imgbw,'holes');
+    imgbw3 = bwareaopen(imgbw2, 5000);
+    imgbw4 = im2uint8(imgbw3);
+    imshow(imgbw4);
+    
+    name = sprintf('Image_%d.png',i);% Create a string corresponding to the image number
+    filename = fullfile('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Images',name);% Creates variable of file path location (including name of the image).
+    imwrite(imgbw4,filename); % Write image data to the file specified by filename (with the image name).
+    
+    vw.writeVideo(imgbw4);
+    
+    title(i);
+    pause(0.01);
 end
+
+vw.close();
 
 vw.close();
