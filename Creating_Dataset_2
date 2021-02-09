@@ -29,9 +29,9 @@ end
 
 vw.close();
 
-%% Apply pre-processing techniques
+%% Apply pre-processing techniques (black & white)
 vid = VideoReader('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Descend_Dataset.avi');
-vw = VideoWriter('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Descend_Processed_Dataset.avi');
+vw = VideoWriter('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Black_and_White\Descend_Processed_Dataset.avi');
 vw.open();
 
 for i = 1:noimages
@@ -47,7 +47,35 @@ for i = 1:noimages
     imshow(imgbw4);
     
     name = sprintf('Image_%d.png',i);% Create a string corresponding to the image number
-    filename = fullfile('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Images',name);% Creates variable of file path location (including name of the image).
+    filename = fullfile('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Black_and_White\Images',name);% Creates variable of file path location (including name of the image).
+    imwrite(imgbw4,filename); % Write image data to the file specified by filename (with the image name).
+    
+    vw.writeVideo(imgbw4);
+    
+    title(i);
+    pause(0.01);
+end
+
+vw.close(); 
+
+
+%% Apply pre-processing techniques (edge-detection)
+vid = VideoReader('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Descend_Dataset.avi');
+vw = VideoWriter('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Edge_Detection\Descend_Edge_Detection_Dataset.avi');
+vw.open();
+
+for i = 1:noimages
+    
+    % Pre-processing techniques
+    frame = readFrame(vid);% Read next frame in 'vid' - assign to corresponding value in oksign.
+    imgray = rgb2gray(frame);
+    imgsize = imresize(imgray, [480, 640]);
+    BW = edge(imgsize,'sobel');
+    imgbw4 = im2uint8(BW);
+    imshow(imgbw4);
+    
+    name = sprintf('Image_%d.png',i);% Create a string corresponding to the image number
+    filename = fullfile('E:\Documents\University\Year 3\ES3H3\Group Project\Descend Sign\Edge_Detection\Images',name);% Creates variable of file path location (including name of the image).
     imwrite(imgbw4,filename); % Write image data to the file specified by filename (with the image name).
     
     vw.writeVideo(imgbw4);
